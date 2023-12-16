@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 export default function Register() {
   const [fullname, setFullname] = useState('');
@@ -19,7 +21,7 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/user/register', {
+      const res = await axios.post('http://localhost:8080/register', {
         fullname,
         username,
         email,

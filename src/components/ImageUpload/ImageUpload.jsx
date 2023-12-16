@@ -1,76 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import './ImageUpload.scss';
 
-const ImageUpload = () => {
+export default function ImageUpload() {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
-  const [message, setMessage] = useState('')
-
-  useEffect(() => {
-    // Hämta användar-ID från localStorage när komponenten mountar
-    const userId = localStorage.getItem('_Id');
-    if (userId) {
-      fetchProfileImage(userId);
-    }
-  }, []);
 
   const handleImageChange = (event) => {
     setSelectedImage(event.target.files[0]);
   };
 
-  const handleImageUpload = async () => {
+  const uploadImage = async () => {
     try {
+      if (!selectedImage) {
+        console.error('No file selected');
+        return;
+      }
       const formData = new FormData();
       formData.append('image', selectedImage);
+      formData.append('userID', localStorage.getItem('_id'))
 
-      const res = await axios.post('http://localhost:8080/user/upload', formData, {
+
+      const response = await axios.post('http://localhost:8080/upload', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
-      const data = res.data;
-
-      if (res.status === 200) {
-        setMessage(data.message);
-        const userId = data.userId; // Använd rätt variabelnamn från responsen
-        setProfileImage(data.path);
-        console.log(data.path)
-        localStorage.setItem('userId', userId);
+      if (response.status === 200) {
+        console.log('Image uploaded successfully');
+        
       } else {
-        setMessage(data.message || 'Bilduppladdningen misslyckades.');
+        console.error('Failed to upload image');
       }
     } catch (error) {
-      console.error('Error uploading image:', error.message);
-      setMessage('Internt serverfel vid bilduppladdning.');
-    }
-  };
-
-  const fetchProfileImage = async (userId) => {
-    try {
-      // Endast göra anropet om userId är definierad
-      if (userId) {
-        const res = await axios.get(`http://localhost:8080/user/getProfileImage/${userId}`);
-        setProfileImage(res.data.path);
-      }
-    } catch (error) {
-      console.error('Error fetching profile image:', error.message);
+      console.error('Error during image upload:', error);
     }
   };
 
   return (
     <div>
-      <input type="file" onChange={handleImageChange} />
-      <button onClick={handleImageUpload}>Upload Image</button>
-      <p>{message}</p>
-      {profileImage && (
-        <div>
-          <h2>Profilbild:</h2>
-          <img src={`http://localhost:8080/${profileImage}`} alt="Profilbild" style={{ maxWidth: '300px' }} />
-        </div>
-      )}
-    </div>
+      <label htmlFor="avatar" className="custom-file-upload lable">
+          {selectedImage && (
+            <img 
+              src={URL.createObjectURL(selectedImage)} 
+              alt="Selected"
+              className="uploaded-image"
+              style={{ maxWidth: '200px' }} 
+            />
+          )}
+        <input 
+          type="file" 
+          name='avatar' 
+          id="avatar" 
+          onChange={handleImageChange} 
+          accept="image/*"
+          className="custom-file-upload"
+        />
+      </label>
+    <button onClick={uploadImage}>Spara</button>
+  </div>
   );
 };
-
-export default ImageUpload;

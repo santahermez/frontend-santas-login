@@ -1,0 +1,38 @@
+/* Styla bilduppladdningsområdet */
+.custom-file-upload input[type="file"] {
+  display: none; /* Dölj standardfilinmatningsfältet */
+}
+
+.custom-file-upload {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+  position: relative; /* Lägg till position: relative för att positionera ikonen korrekt */
+  background: url("https://cdn3.iconfinder.com/data/icons/basic-user-interface-5/64/upload_import_internet_downloading-512.png") center/60% no-repeat; /* Lägg till bakgrundsbilden här */
+  transition: background-size 0.3s ease, opacity 0.3s ease; /* Lägg till övergång för att skapa en mjuk effekt */
+}
+
+.custom-file-upload:hover {
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  background-size: 70%; /* Justera storleken på bakgrundsbilden vid hovring */
+  opacity: 100;
+}
+
+.custom-file-upload:active {
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+}
+
+.custom-file-upload img {
+  width: 100%; /* Fyll upp förälderns bredd */
+  height: 100%; /* Fyll upp förälderns höjd */
+  border-radius: 50%;
+  object-fit: cover; /* Säkerställ att bilden täcker hela området */
+}

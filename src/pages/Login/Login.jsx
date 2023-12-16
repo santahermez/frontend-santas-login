@@ -17,7 +17,7 @@ export default function Login({setToken}) {
       return;
     }
     try {
-      const res = await axios.post("http://localhost:8080/user/login", {
+      const res = await axios.post("http://localhost:8080/login", {
         email,
         password,
       });

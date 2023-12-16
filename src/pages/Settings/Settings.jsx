@@ -4,7 +4,7 @@ export default function Settings() {
 
   return (
     <div>
-      <h1>Settings</h1>
+      <h1>Inställningar</h1>
       <ImageUpload />
     </div>
   )
