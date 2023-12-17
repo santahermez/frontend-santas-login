@@ -1,5 +1,5 @@
-.errormessage {
-  visibility: hidden;
+.error-message {
+  color: red;
 }
 
 [aria-invalid="true"] {

@@ -49,7 +49,7 @@ export default function User({ userID }) {
           <Row className="mt-3">
           <Col className="md-3">
           {imageData && (
-            <Image src={imageData} alt="User" className="profile-image" roundedCircle thumbnail/>
+            <Image src={imageData} alt="User" className="profile-image" roundedCircle />
             )}
           </Col>
           <Col className="mt-3" xs={12}>

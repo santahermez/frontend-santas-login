@@ -13,15 +13,18 @@ export default function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [validated, setValidated] = useState(false);
 
   const navigate = useNavigate();
 
   const handleRegistration = async (e) => {
-    e.preventDefault();
-
-    if (!fullname || !username || !email || !password) {
-      return;
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+
+    setValidated(true);
 
     try {
       const res = await axios.post("http://localhost:8080/register", {
@@ -31,16 +34,32 @@ export default function Register() {
         password,
       });
 
+      if (!fullname || !username || !email || !password) {
+        return;
+      }
+
       const data = res.data;
+      console.log("Server response:", data);
 
       if (res.status === 200) {
-        setMessage(data.message);
-        navigate("/login");
+        setMessage('Registreringen lyckades!');
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
         return;
       }
       setMessage(data.message);
     } catch (error) {
-      console.error(error);
+      console.error("error:", error);
+
+      if (error.response && error.response.status === 409) {
+        setMessage("Email eller användarnamn existerar redan");
+      } else if (error.response && error.response.status === 400) {
+        setMessage("Ange giltig email");
+        
+      } else {
+        setMessage("Internt serverfel");
+      }
     }
   };
 
@@ -51,18 +70,28 @@ export default function Register() {
           Registrera dig
         </Card.Header>
         <Card.Body>
-          <Form>
+          <Form noValidate validated={validated}>
             <Row className="mb-3">
               <Col>
                 <Form.Group controlId="formBasicFullname">
-                  <FloatingLabel controlId="formBasicFullname" label="Namn">
+                  <FloatingLabel
+                    controlId="formBasicFullname"
+                    label="För- och efternamn"
+                  >
                     <Form.Control
                       type="text"
                       name="fullname"
-                      placeholder="För- & efternamn"
+                      placeholder="För- och efternamn"
                       required={true}
                       value={fullname}
                       onChange={(e) => setFullname(e.target.value)}
+                      className={
+                        validated && !fullname
+                          ? "is-invalid"
+                          : fullname
+                          ? "is-valid"
+                          : ""
+                      }
                     />
                   </FloatingLabel>
                 </Form.Group>
@@ -83,6 +112,13 @@ export default function Register() {
                       required={true}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
+                      className={
+                        validated && !username
+                          ? "is-invalid"
+                          : username
+                          ? "is-valid"
+                          : ""
+                      }
                     />
                   </FloatingLabel>
                 </Form.Group>
@@ -98,8 +134,16 @@ export default function Register() {
                       name="email"
                       placeholder="Email"
                       required={true}
+                      pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      className={
+                        validated && !email
+                          ? "is-invalid"
+                          : email
+                          ? "is-valid"
+                          : ""
+                      }
                     />
                   </FloatingLabel>
                 </Form.Group>
@@ -117,6 +161,13 @@ export default function Register() {
                       required={true}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
+                      className={
+                        validated && !password
+                          ? "is-invalid"
+                          : password
+                          ? "is-valid"
+                          : ""
+                      }
                     />
                   </FloatingLabel>
                 </Form.Group>
@@ -131,8 +182,10 @@ export default function Register() {
               Registrera
             </Button>
           </Form>
+          <Col className="mb-3">
+            <Card.Text className="text-muted error">{message}</Card.Text>
+          </Col>
 
-          {message && <h4 className="mt-3">{message}</h4>}
           <Link to="/login" className="mt-3 d-block">
             Redan medlem? Logga in här.
           </Link>

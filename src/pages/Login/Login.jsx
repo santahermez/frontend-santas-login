@@ -8,25 +8,33 @@ import Row from "react-bootstrap/Row";
 import Card from "react-bootstrap/Card";
 
 export default function Login({ setToken }) {
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setMessage("Fyll i både e-post och lösenord.");
-      return;
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
     }
+
     try {
       const res = await axios.post("http://localhost:8080/login", {
-        email,
+        identifier,
         password,
       });
+      
+      setValidated(true);
+      if (!identifier || !password) {
+        setMessage("Fyll i både e-post och lösenord.");
+        return;
+      }
 
-      const data = res.data;
-
+      const data = await res.data;
+ 
       if (res.status === 200) {
         setMessage(data.message);
         localStorage.setItem("accessToken", data.token);
@@ -42,7 +50,7 @@ export default function Login({ setToken }) {
       }
     } catch (error) {
       console.error("Error during login:", error);
-      setMessage("Internal server error");
+      setMessage("Felaktiga inloggningsuppgifter");
     }
   };
 
@@ -51,15 +59,17 @@ export default function Login({ setToken }) {
       <Card className="form-container">
         <Card.Header as="h3">Logga in</Card.Header>
         <Card.Body>
-          <Form>
+          <Form noValidate validated={validated}>
             <Col className="mb-3">
-              <Form.Group controlId="formBasicEmail">
-                <FloatingLabel controlId="formBasicEmail" label="Email">
+              <Form.Group controlId="formBasicIdentifier">
+                <FloatingLabel controlId="formBasicIdentifier" label="Email eller användarnamn">
                   <Form.Control
-                    placeholder="Email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    required={true}
+                    placeholder="Email eller användarnamn"
+                    type="identifier"
+                    value={identifier}
+                    onChange={(e) => setIdentifier(e.target.value)}
+                    className={validated && !identifier ? "is-invalid" : identifier ? "is-valid" : ''}
                   />
                 </FloatingLabel>
               </Form.Group>
@@ -68,18 +78,20 @@ export default function Login({ setToken }) {
               <Form.Group controlId="formBasicPassword">
                 <FloatingLabel controlId="floatingPassword" label="Password">
                   <Form.Control
+                    required={true}
                     type="password"
                     placeholder="Lösenord"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    className={validated && !password ? "is-invalid" : password ? "is-valid" : ''}
                   />
                 </FloatingLabel>
               </Form.Group>
             </Col>
 
             <Col className="mb-3">
-              <Card.Text className="text-muted">
-                <p>{message}</p>
+              <Card.Text className="text-muted error" >
+                {message}
               </Card.Text>
             </Col>
 
