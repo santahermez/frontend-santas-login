@@ -4,6 +4,7 @@ import "./User.scss";
 import { Container } from "react-bootstrap";
 import { Card } from "react-bootstrap";
 import { Row, Col } from "react-bootstrap";
+import { Image } from "react-bootstrap";
 
 export default function User({ userID }) {
   const [user, setUser] = useState(null);
@@ -48,7 +49,7 @@ export default function User({ userID }) {
           <Row className="mt-3">
           <Col className="md-3">
           {imageData && (
-            <Card.Img src={imageData} alt="User" className="profile-image" />
+            <Image src={imageData} alt="User" className="profile-image" roundedCircle thumbnail/>
             )}
           </Col>
           <Col className="mt-3" xs={12}>
