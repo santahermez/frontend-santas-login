@@ -44,6 +44,9 @@ export default function HomePage() {
           <Card.Body>
             <ListGroup>
               {users.map((user) => (
+                // {user.lastLogin && (
+
+                // )}
                 <ListGroup.Item key={user._id} className="user-item">
                   <div className="user-info">
                     {user.image ? (
@@ -60,7 +63,12 @@ export default function HomePage() {
                       />
                     )}
                     <Card.Text className="username">@{user.username}</Card.Text>
-                    <Card.Text className="last-time-seen">Senast online: {user.lastLogin} </Card.Text>
+                    {user.lastLogin ? (
+
+                    <Card.Text className="last-time-seen">Senast online: {user.lastLogin}</Card.Text>
+                    ) : (
+                      <Card.Text className="last-time-seen">Konto skapat: {user.createdAt.slice(0, 10)}</Card.Text>
+                    )}
                   </div>
                 </ListGroup.Item>
               ))}
