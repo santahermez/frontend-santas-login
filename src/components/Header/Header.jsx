@@ -1,27 +1,42 @@
-import './Header.css'
+import React from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
+import { HopOff } from 'lucide-react';
 
-export default function Header({ token, handleLogout}) {
+
+export default function Header({ token, handleLogout }) {
   return (
-    <header className='header'>
-      <h1>This is a header</h1>
-      <p>{token ? 'Inloggad' : 'Inte inloggad'}</p>
-      <nav>
-        <div className="nav-container">
-          <NavLink to="/">Hem</NavLink>
+    <Navbar bg="dark" data-bs-theme="dark" className="navbar">
+      <Container>
+        <Navbar.Brand href="/"><div><HopOff className="nav-icon"/> Santas Login</div></Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="justify-content-end">
+          <Nav >
+            <NavLink to="/" className="nav-link">
+              Home
+            </NavLink>
+
             {token ? (
               <>
-                <NavLink to="/account/profile">Profil</NavLink>
-                <NavLink to="/account/settings">inställningar</NavLink>
-                <NavLink to="/" onClick={handleLogout}>
-                  Logga ut
+                <NavLink to="/account/profile" className="nav-link">
+                  Profile
+                </NavLink>
+                <NavLink to="/account/settings" className="nav-link">
+                  Inställningar
+                </NavLink>
+                <NavLink to="/" className="nav-link" onClick={handleLogout}>
+                  Logout
                 </NavLink>
               </>
             ) : (
-              <NavLink to="/login">Logga in</NavLink>
+              <NavLink to="/login" className="nav-link">
+                Login
+              </NavLink>
             )}
-        </div>
-      </nav>
-    </header>
-  )
+          </Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
+ 
+  );
 }

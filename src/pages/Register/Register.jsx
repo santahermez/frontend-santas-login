@@ -1,15 +1,18 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { Container, Form, Button } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import FloatingLabel from "react-bootstrap/FloatingLabel";
+import Card from "react-bootstrap/Card";
 
 export default function Register() {
-  const [fullname, setFullname] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [fullname, setFullname] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
 
@@ -21,7 +24,7 @@ export default function Register() {
     }
 
     try {
-      const res = await axios.post('http://localhost:8080/register', {
+      const res = await axios.post("http://localhost:8080/register", {
         fullname,
         username,
         email,
@@ -29,66 +32,112 @@ export default function Register() {
       });
 
       const data = res.data;
-      console.log(data.status)
 
       if (res.status === 200) {
         setMessage(data.message);
-        navigate('/login');
+        navigate("/login");
         return;
       }
       setMessage(data.message);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
-    <div className="container">
-      <Link to="/">Hem</Link>
-      <h1>Registrera dig</h1>
+    <Container>
+      <Card className="form-container">
+        <Card.Header as="h2" className="mb-2">
+          Registrera dig
+        </Card.Header>
+        <Card.Body>
+          <Form>
+            <Row className="mb-3">
+              <Col>
+                <Form.Group controlId="formBasicFullname">
+                  <FloatingLabel controlId="formBasicFullname" label="Namn">
+                    <Form.Control
+                      type="text"
+                      name="fullname"
+                      placeholder="För- & efternamn"
+                      required={true}
+                      value={fullname}
+                      onChange={(e) => setFullname(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+            </Row>
 
-      <form>
-        <label htmlFor="fullname">Namn</label>
-        <input
-          type="text"
-          name="fullname"
-          required={true}
-          value={fullname}
-          onChange={(e) => setFullname(e.target.value)}
-        />
+            <Row className="mb-3">
+              <Col>
+                <Form.Group controlId="formBasicUsername">
+                  <FloatingLabel
+                    controlId="formBasicUsername"
+                    label="Användarnamn"
+                  >
+                    <Form.Control
+                      type="text"
+                      name="username"
+                      placeholder="Användarnamn"
+                      required={true}
+                      value={username}
+                      onChange={(e) => setUsername(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <label htmlFor="username">Användarnamn</label>
-        <input
-          type="text"
-          name="username"
-          required={true}
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+            <Row className="mb-3">
+              <Col>
+                <Form.Group controlId="formBasicEmail">
+                  <FloatingLabel controlId="formBasicEmail" label="Email">
+                    <Form.Control
+                      type="email"
+                      name="email"
+                      placeholder="Email"
+                      required={true}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          required={true}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+            <Row className="mb-3">
+              <Col>
+                <Form.Group controlId="formBasicPassword">
+                  <FloatingLabel controlId="formBasicPassword" label="Lösenord">
+                    <Form.Control
+                      type="password"
+                      name="password"
+                      placeholder="Lösenord"
+                      required={true}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </FloatingLabel>
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <label htmlFor="password">Lösenord</label>
-        <input
-          type="password"
-          name="password"
-          required={true}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+            <Button
+              variant="primary"
+              type="button"
+              onClick={handleRegistration}
+            >
+              Registrera
+            </Button>
+          </Form>
 
-        <button type="button" onClick={handleRegistration}>Registrera</button>
-      </form>
-      
-      <h1>{message}</h1>
-      <Link to="/login">Redan medlem?</Link>
-    </div>
+          {message && <h4 className="mt-3">{message}</h4>}
+          <Link to="/login" className="mt-3 d-block">
+            Redan medlem? Logga in här.
+          </Link>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 }

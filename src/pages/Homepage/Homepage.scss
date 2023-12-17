@@ -1,0 +1,30 @@
+// Homepage.scss
+
+.user-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.username {
+  margin-left: 10px;
+  align-self: center;
+  margin-top: 10px;
+  font-weight: bold;
+  color: dimgrey;
+}
+
+.last-time-seen {
+  margin-left: auto;
+  font-size: 12px;
+}
